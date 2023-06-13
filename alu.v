@@ -1,239 +1,160 @@
 `include "util.v"
 
-module alu
-(
- input wire [31:0] rs1,
- input wire [31:0] rs2,
- input wire [3:0] opcode,
- input wire [2:0] funct3,
- input wire [31:0] imm,
- input wire [31:0] PC,
- output wire [31:0] rd,
- output wire zero, neg, take_branch,
- output wire [31:0] new_PC
- );
+module alu (
+    input wire [31:0] rs1,
+    input wire [31:0] rs2,
+    input wire [6:0] opcode,
+    input wire [2:0] funct3,
+    input wire [31:0] imm,
+    input wire [31:0] PC,
+    output wire [31:0] rd,
+    output wire zero, neg, take_branch,
+    output wire [31:0] n_PC
+);
 
-reg [31:0] out_reg;
-reg [6:0] funct7 = imm[7:0];
-reg [31:0] abs_aux1, abs_aux2;
+//    reg [6:0] op;
+    reg [31:0] out_reg = 0;
+    reg [6:0] funct7;
+    reg [31:0] abs_aux1, abs_aux2, new_PC;
+    reg flag = 0;
 
-assign rd = out_reg;
-assign zero = (rs1 == rs2);
-assign neg = (rs1 < rs2);
-
-always @(*)
-take_branch = 0;
-begin
-	case (opcode)
-	//-----REGISTER - IMMEDIATE OP -----
-		`OP_IMM: begin
-			case(funct3)
-				3'b000: begin		//ADDI
-					out_reg = rs1 + imm;
-				end
-				3'b010: begin 		//SLTI
-				//REVISAR TEMA SIGNADO O NO SIGNADO
-					if(rs1 < imm)
-						out_reg = 1;
-					else
-						out_reg = 0;
-				end
-				3'b011: begin 		//SLTIU
-					//Valor absoluto de rs1
-					if (rs1[31] == 1'b1)
-						abs_aux1 = -rs1;
-					else
-						abs_aux1 = imm;
-					//Valr absoluto de imm
-					if (imm[31] == 1'b1)
-						abs_aux2 = -imm;
-					else
-						abs_aux2 = imm;
-					//Comparo al reves. Si imm es 1, el resultado es 1 si rs1 es cero
-					if(abs_aux1 > abs_aux2)
-						out_reg = 1;
-					else
-						out_reg = 0;
-				end
-				3'b111: begin 		//ANDI
-					out_reg = rs1 & imm;
-				end
-				3'b110: begin 		//ORI
-					out_reg = rs1 | imm;
-				end
-				3'b100: begin 		//XORI
-					out_reg = rs1 ^ imm;
-				end
-				3'b001: begin 		//SLLI
-					out_reg = rs1 << imm[4:0];
-				end
-				3'b101: begin 	
-					case(imm[11:5])
-						7'b0000000: begin	//SRLI
-							out_reg = rs1 >> imm[4:0];
-						end
-						7'b0100000: begin	//SRAI
-							out_reg = rs1 >>> imm[4:0];
-						end
-					endcase
-				end
-			endcase
-		end
-		`LUI:  begin				//LUI
-			out_reg = imm;
-		end
-		`AUIPC:  begin				//AUIPC
-			// EN las especificaciones de RISC dice que se guarda en un registro...
-			// creo que conviene hacer cmo dice el libro que tiene una salida aparte para el PC
-			new_PC = PC + imm;
-		end
-	//---- REGISTER - REGISTER OP ----
-		`OP:  begin
-			case(funct3)
-				3'b000: begin
-					case(funct7)
-						7'b0000000: begin	//ADD
-							out_reg = rs1 + rs2;
-						end
-						7'b0100000: begin	//SUB
-							out_reg = rs1 - rs2;
-						end
-					endcase
-				end
-				3'b010: begin 	//SLT
-					if(rs1 < rs2)
-						out_reg = 1;
-					else
-						out_reg = 0;
-				end
-				3'b011: begin 	//SLTU
-					//Valor absoluto de rs1
-					if (rs1[31] == 1'b1)
-						abs_aux1 = -rs1;
-					else
-						abs_aux1 = imm;
-					//Valr absoluto de rs2
-					if (imm[31] == 1'b1)
-						abs_aux2 = -rs2;
-					else
-						abs_aux2 = rs2;
-					//Comparo al reves. Si rs2 es 1, el resultado es 1 si rs1 es cero
-					if(abs_aux1 > abs_aux2)
-						out_reg = 1;
-					else
-						out_reg = 0;
-				end
-				3'b111: begin 	//AND
-					out_reg = rs1 & rs2;
-				end
-				3'b110: begin 	//OR
-					out_reg = rs1 | rs2;
-				end
-				3'b100: begin 	//XOR
-					out_reg = rs1 & rs2;
-				end
-				3'b001: begin 	//SLL
-					out_reg = rs1 << rs2[4:0];
-				end
-				3'b101: begin
-					case(imm[11:5])
-						7'b0000000: begin	//SRL
-							out_reg = rs1 >> rs2[4:0];
-						end
-						7'b0100000: begin	//SRA
-							out_reg = rs1 >>> rs2[4:0];
-						end
-					endcase
-				end
-			endcase
-		end	
-		//REVISAR TEMA SALTOS
-		`JAL: begin
-			//REVISAR
-			new_PC = PC + imm + 4;
-		end
-		`JALR: begin
-			//REVISAR
-			new_PC = rs1 + imm + 4;
-		end
-		`BRANCH: begin
-			case(funct3)
-				3'b000: begin	//BEQ
-					if(rs1 == rs2) begin
-						new_PC = PC + imm;
-						take_branch = 1;
-					end
-					else
-						take_branch = 0;
-				end
-				3'b001: begin	//BNE
-					if(rs1 != rs2) begin
-						new_PC = PC + imm;
-						take_branch = 1;
-					end
-					else
-						take_branch = 0;
-				end
-				3'b100: begin	//BLT
-					if(rs1 < rs2) begin
-						new_PC = PC + imm;
-						take_branch = 1;
-					end
-					else
-						take_branch = 0;
-				end
-				3'b110: begin 	//BLTU
-					//Valor absoluto de rs1
-					if (rs1[31] == 1'b1)
-						abs_aux1 = -rs1;
-					else
-						abs_aux1 = imm;
-					//Valr absoluto de rs2
-					if (imm[31] == 1'b1)
-						abs_aux2 = -rs2;
-					else
-						abs_aux2 = rs2;
-					//Comparo al reves. Si rs2 es 1, el resultado es 1 si rs1 es cero
-					if(abs_aux1 > abs_aux2) begin
-						new_PC = PC + imm;
-						take_branch = 1;
-					end
-					else
-						take_branch = 0;
-				end
-				3'b101: begin 	//BGE
-					if(rs1 >= rs2) begin
-						new_PC = PC + imm;
-						take_branch = 1;
-					end
-					else
-						take_branch = 0;
-				end
-				3'b111: begin 
-					//Valor absoluto de rs1
-					if (rs1[31] == 1'b1)
-						abs_aux1 = -rs1;
-					else
-						abs_aux1 = imm;
-					//Valr absoluto de rs2
-					if (imm[31] == 1'b1)
-						abs_aux2 = -rs2;
-					else
-						abs_aux2 = rs2;
-					//Comparo al reves. Si rs2 es 1, el resultado es 1 si rs1 es cero
-					if(abs_aux1 <= abs_aux2) begin
-						new_PC = PC + imm;
-						take_branch = 1;
-					end
-					else
-						take_branch = 0;
-				end
-		end
-		`LOAD, `STORE: begin
-			out_reg = rs1 + imm;
-		end
-	endcase 
-end
-
+    always @(*)
+    begin
+		funct7 = imm[6:0];
+        case (opcode)
+            //-----REGISTER - IMMEDIATE OP -----
+            `OP_IMM: begin
+                case(funct3)
+                    3'b000: out_reg <= rs1 + imm;      // ADDI
+                    3'b010: out_reg <= (rs1 < imm) ? 1 : 0;   // SLTIU
+                    3'b011: begin                        // SLTI
+                        // Valor absoluto de rs1
+                        abs_aux1 = (rs1[31] == 1'b1) ? -rs1 : rs1;
+                        // Valor absoluto de imm
+                        abs_aux2 = (imm[31] == 1'b1) ? -imm : imm;
+                        // Comparo al revés. Si imm es 1, el resultado es 1 si rs1 es cero
+                        out_reg <= (abs_aux1 > abs_aux2) ? 1 : 0;
+                    end
+                    3'b111: out_reg <= rs1 & imm;        // ANDI
+                    3'b110: out_reg <= rs1 | imm;        // ORI
+                    3'b100: out_reg <= rs1 ^ imm;        // XORI
+                    3'b001: out_reg <= rs1 << imm[4:0];  // SLLI
+                    3'b101: begin                      // SRLI, SRAI
+                        case(imm[11:5])
+                            7'b0000000: out_reg <= rs1 >> imm[4:0];    // SRLI
+                            7'b0100000: out_reg <= rs1 >>> imm[4:0];   // SRAI
+                            default: out_reg <= 0;
+                        endcase
+                    end
+                    default: out_reg <= 0;
+                endcase
+            end
+            `LUI: out_reg <= imm;                      // LUI
+            `AUIPC: new_PC <= PC + imm;                // AUIPC
+            //---- REGISTER - REGISTER OP ----
+            `OP: begin
+                case(funct3)
+                    3'b000: begin
+                        case(funct7)
+                            7'b0000000: out_reg <= rs1 + rs2;     // ADD
+                            7'b0100000: out_reg <= rs1 - rs2;     // SUB
+                            default: out_reg <= 0;
+                        endcase
+                    end
+                    3'b010: out_reg <= (rs1 < rs2) ? 1 : 0;       // SLTU
+                    3'b011: begin                              // SLT
+                        // Valor absoluto de rs1
+                        abs_aux1 = (rs1[31] == 1'b1) ? -rs1 : rs1;
+                        // Valor absoluto de rs2
+                        abs_aux2 = (rs2[31] == 1'b1) ? -rs2 : rs2;
+                        // Comparo al revés. Si rs2 es 1, el resultado es 1 si rs1 es cero
+                        out_reg <= (abs_aux1 > abs_aux2) ? 1 : 0;
+                    end
+                    3'b111: out_reg <= rs1 & rs2;             // AND
+                    3'b110: out_reg <= rs1 | rs2;             // OR
+                    3'b100: out_reg <= rs1 & rs2;             // XOR
+                    3'b001: out_reg <= rs1 << rs2[4:0];       // SLL
+                    3'b101: begin                            // SRL, SRA
+                        case(imm[11:5])
+                            7'b0000000: out_reg <= rs1 >> rs2[4:0];   // SRL
+                            7'b0100000: out_reg <= rs1 >>> rs2[4:0];  // SRA
+                            default: out_reg <= 0;
+                        endcase
+                    end
+                    default: out_reg <= 0;
+                endcase
+            end
+            //REVISAR TEMA SALTOS
+            `JAL: new_PC <= PC + imm + 4;              // JAL
+            `JALR: new_PC <= rs1 + imm + 4;            // JALR
+            `BRANCH: begin
+                case(funct3)
+                    3'b000: begin                      // BEQ
+                        if (rs1 == rs2) begin
+                            new_PC <= PC + imm;
+                            flag <= 1;
+                        end else
+                            flag <= 0;
+                    end
+                    3'b001: begin                     // BNE
+                        if (rs1 != rs2) begin
+                            new_PC <= PC + imm;
+                            flag <= 1;
+                        end else
+                            flag <= 0;
+                    end
+                    3'b100: begin                     // BLTU
+                        if (rs1 < rs2) begin
+                            new_PC <= PC + imm;
+                            flag <= 1;
+                        end else
+                            flag <= 0;
+                    end
+                    3'b110: begin                            // BLT
+                        // Valor absoluto de rs1
+                        abs_aux1 = (rs1[31] == 1'b1) ? -rs1 : rs1;
+                        // Valor absoluto de rs2
+                        abs_aux2 = (rs2[31] == 1'b1) ? -rs2 : rs2;
+                        // Comparo al revés. Si rs2 es 1, el resultado es 1 si rs1 es cero
+                        if (abs_aux1 > abs_aux2) begin
+                            new_PC <= PC + imm;
+                            flag <= 1;
+                        end else
+                            flag <= 0;
+                    end
+                    3'b101: begin                            // BGE
+                        if (rs1 >= rs2) begin
+                            new_PC <= PC + imm;
+                            flag <= 1;
+                        end else
+                            flag <= 0;
+                    end
+                    3'b111: begin
+                        // Valor absoluto de rs1
+                        abs_aux1 = (rs1[31] == 1'b1) ? -rs1 : rs1;
+                        // Valor absoluto de rs2
+                        abs_aux2 = (rs2[31] == 1'b1) ? -rs2 : rs2;
+                        // Comparo al revés. Si rs2 es 1, el resultado es 1 si rs1 es cero
+                        if (abs_aux1 <= abs_aux2) begin
+                            new_PC <= PC + imm;
+                            flag <= 1;
+                        end else
+                            flag <= 0;
+                    end
+                    default: out_reg <= 0;
+                endcase
+            end
+            `LOAD, `STORE: out_reg <= rs1 + imm;        // LOAD, STORE
+            default: out_reg <= 0;
+        endcase
+    end
+	 
+	 
+    assign rd = out_reg;
+    assign zero = (rs1 == rs2);
+    assign neg = (rs1 < rs2);
+    assign n_PC = new_PC;
+    assign take_branch = flag;
  
 endmodule
+
