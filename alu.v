@@ -1,27 +1,32 @@
 module alu
 (
- input[31:0] busA,
- input[31:0] busB,
- input[6:0] op,
- input[2:0] funct3,
- input[6:0] funct7,
+ input wire [31:0] busA,
+ input wire [31:0] busB,
+ input wire [2:0] funct3,
+ input wire [6:0] funct7,
+ input wire [6:0] op,
  output reg [31:0] busC
  );
-
  
-always @(busA, busB, op)
-begin
-	case (op)
-		4'b0000:  busC = 0;
-		4'b0001:  busC = 1;
-		4'b0010:  busC = busA + busB;
-		4'b0011:  busC = busA - busB;
-		4'b0100:  busC = busA + 1;
-		4'b0101:  busC = busA - 1;
-		4'b1000:  busC = busA;		
-		4'b1001:  busC = busB;		
-	endcase 
-end
+	initial begin
+		 busC = 32'h00000000;  // Inicialización de registro 0 32'h00000000
+		 
+	end
+	 
+	always @(*)
+	begin
+		case (op)
+			7'b0000011:  busC = busA; // le pongo busA momentaneo para chequear funcionamiento
+			7'b0000111:  busC = 1;
+			7'b0001011:  busC = busA + busB;
+			7'b0001111:  busC = busA - busB;
+			7'b0010011:  busC = busA + 1;
+			7'b0010111:  busC = busA - 1;
+			7'b0100011:  busC = busA;		
+			7'b0100111:  busC = busB;		
+			default :    busC = 0;
+		endcase 
+	end
 
  
 endmodule

@@ -1,22 +1,25 @@
 module fetch
 (
- input wire[31:0] PC_in,
+ input wire[31:0] PCin,
  input wire clk,
  input wire ena,
- output wire [31:0] PC_out,
  output wire [31:0] memAddress
  );
-
-	reg[31:0] q;
 	
-	always @(posedge clk) begin
-		if (ena) begin
-			q <= PC_in + 4;	//Le suma 4 a cada pulso de clk
-		end
+	reg[31:0] currPC;
+	
+	
+	initial begin 
+		currPC = 32'h00000000;
 	end
 	
-	assign memAddress = PC_in;
-	assign PC_out = q;
+	always @(posedge clk) begin
+			if (ena) begin
+				currPC = PCin;
+			end
+	end
+	
+	assign memAddress = currPC;
 
 
 endmodule
