@@ -211,6 +211,7 @@ module Decoder ( instruccion ,rs1,rs2,rd,funct3,imm_out,opcode);	//PEnsar como a
 							rd=5'b00000;
 							funct3=3'b000;
 							rs1=5'b00000;
+							rs2=0;
 							imm_out={25'b0000000000000000000000000,instruccion[31:25]};
 							opcode=7'b0110011;
 						end
