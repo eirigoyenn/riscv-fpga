@@ -13,11 +13,9 @@
   addi x4, x4, -1      //le resto 1 al contador
 
   # Verificar si se alcanzó el número deseado de iteraciones sino salto a loop
-  bne x4,x0, -16        //si el registro x4 es distinto de cero salto 4 bytes hacia atras
+  bne x4,x0, -16       //si el registro x4 es distinto de cero salto 4 bytes hacia atras
 
-  # Terminar el programa
-  addi x17, x0, 10      // guardo un 10 en el registro x17 para indicar un fin de programa
-  ecall                // ejecuta el valor del x17 y termina el programa 
+
 
 #codigo en binario (instrucciones de 32 bits)
 
@@ -29,8 +27,7 @@
 00000000000000011000000100010011
 11111111111100100000001000010011
 11111110000000100001111011100011
-00000000101000000000100010010011
-00000000000000000000000001110011
+
 
 #codigo en hexa 
 
@@ -42,5 +39,37 @@
 0x00018113
 0xfff20213
 0xfe021ee3
-0x00a00893
-0x00000073
+
+
+93
+00
+00
+00
+13
+01
+10
+00
+13
+02
+40
+01
+B3
+81
+20
+00
+93
+00
+01
+00
+13
+81
+01
+00
+13
+02
+F2
+FF
+E3
+1E
+02
+FE
