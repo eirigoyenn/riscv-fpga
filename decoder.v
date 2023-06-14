@@ -94,9 +94,10 @@ module Decoder ( instruccion ,rs1,rs2,rd,funct3,imm_out,opcode);	//PEnsar como a
 							 rs2=instruccion[24:20];
 							 rd=instruccion[11:7];
 							 funct3=instruccion[14:12];		
-							 imm_out={25'b0000000000000000000000000,instruccion[31:25]};
+							 imm_out={25'b0000000000000000000000000,instruccion[31:25]}; //func7 lo encolo al final
 							 opcode=7'b0110011;
 						end 	
+						
 		7'b1101111:begin  //JAL
 							rd=instruccion[11:7];
 							rs1=0;
@@ -214,13 +215,9 @@ module Decoder ( instruccion ,rs1,rs2,rd,funct3,imm_out,opcode);	//PEnsar como a
 						opcode=7'b0110011;
 					end
 	endcase
-	op = inst[6:0];
 end
 	
 endmodule
-
-
-
 
 
 
