@@ -13,7 +13,7 @@
   addi x4, x4, -1      //le resto 1 al contador
 
   # Verificar si se alcanzó el número deseado de iteraciones sino salto a loop
-  bne x4,x0, -4        //si el registro x4 es distinto de cero salto 4 bytes hacia atras
+  bne x4,x0, -16        //si el registro x4 es distinto de cero salto 4 bytes hacia atras
 
   # Terminar el programa
   addi x17, x0, 10      // guardo un 10 en el registro x17 para indicar un fin de programa
