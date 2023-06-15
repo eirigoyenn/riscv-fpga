@@ -4,43 +4,75 @@ module ram_async(
   input wire [31:0] wBus,
   input wire write_,
   input wire signed_,
+  input wire clk, 
   output wire [31:0] q
 );
 
 	reg [31:0] q0;
-	reg [7:0] memory [255:0]; 
-	//initial begin
-		//$readmemh("raminit.hex", memory);
-	//end
-  
-	always @ (*) begin 
+	reg [7:0] memory_ram [255:0]; 
+	initial begin
+    $readmemh("raminit.hex", memory_ram);
+   end
+
+	always @ (posedge clk) begin 
 	
-		if (write_) begin  // Si quiero escribir (no se puede escribir el registro 0)
-			memory[address] <= wBus;  // Escritura en el registro seleccionado
-		end
-		else begin
+		if (write_==1'b1) begin  
 			case(bytes_)
-				
-				3'b01: begin
+				3'b001: begin
 							if(signed_ == 1) begin 
-								q0 = {{24{memory[address][7]}} , memory[address]};
+								memory_ram[address] <= wBus[7:0];
+								q0 <= 32'h0000000;
 							end
 							else begin
-								q0 = {24'h000000 , memory[address]};
+								memory_ram[address] <= wBus[7:0];
+								q0 <= 32'h0000000;
 							end
 						end
 				3'b010: begin
 							if(signed_ == 1) begin 
-								q0 = {{16{memory[address+1][7]}} , memory[address+1], memory[address]};
+								memory_ram[address] <= wBus[7:0];
+								memory_ram[address+1] <= wBus[15:8];
+								q0 <= 32'h0000000;
 							end
 							else begin
-								q0 = {16'h0000 , memory[address]};
+								memory_ram[address] <= wBus[7:0];
+								memory_ram[address+1] <= wBus[15:8];
+								q0 <= 32'h0000000;
 							end
 						end
 				3'b100: begin
-								q0 = {memory[address+3],memory[address+2],memory[address+1],memory[address]};
+								memory_ram[address] <= wBus[7:0];
+								memory_ram[address+1] <= wBus[15:8];
+								memory_ram[address+2] <= wBus[23:16];
+								memory_ram[address+3] <= wBus[31:24];
+								q0 <= 32'h0000000;
 						end
-				default : q0 = 32'h00000000;
+				default : q0 <= 32'h0000000;
+			endcase
+		end
+		else begin
+			case(bytes_)
+				
+				3'b001: begin
+							if(signed_ == 1) begin 
+								q0 <= {{24{memory_ram[address][7]}} , memory_ram[address]};
+							end
+							else begin
+								q0 <= {24'h000000 , memory_ram[address]};
+							end
+						end
+				3'b010: begin
+							if(signed_ == 1) begin 
+								q0 <= {{16{memory_ram[address+1][7]}} , memory_ram[address+1], memory_ram[address]};
+							end
+							else begin
+								q0 <= {16'h0000 , memory_ram[address]};
+							end
+						end
+				3'b100: begin
+								q0 <= {memory_ram[address+3],memory_ram[address+2],memory_ram[address+1],memory_ram[address]};
+						end
+				default : q0 <= 32'hFFFFFFFF;
 			endcase
 		end
 	end
