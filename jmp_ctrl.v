@@ -20,7 +20,7 @@ module jmp_ctrl (
         endcase
     end
 	 
-    assign n_PC = new_PC;
+    assign PC_jmp = new_PC;
  
 endmodule
 

@@ -8,21 +8,19 @@ module alu (
     input wire [6:0] opcode,
     input wire [31:0] PCin,
     output wire [31:0] busC,
-    output wire change_PC
+    output wire take_jmp
 );
 
-//    reg [6:0] op;
     reg [31:0] out_reg = 0;
     reg [6:0] funct7;
     reg [31:0] abs_aux1, abs_aux2;
-    reg flag = 0;
+    reg flag = 0;	 
 
     always @(*)
     begin
+	 out_reg = 0;
+	 flag = 0;
 		funct7 = imm[6:0];
-		out_reg = 0;
-		abs_aux1 = 0;
-		abs_aux2 = 0;
         case (opcode)
             //-----REGISTER - IMMEDIATE OP -----
             `OP_IMM: begin
@@ -129,7 +127,7 @@ module alu (
 	 
 	 
     assign busC = out_reg;
-    assign take_branch = flag;
+    assign take_jmp = flag;
  
 endmodule
 
