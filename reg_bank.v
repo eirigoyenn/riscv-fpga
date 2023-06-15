@@ -15,6 +15,7 @@ module reg_bank(
     registers[2] = 32'h00000002;
   end
   
+  
   assign busA = (readPort1 != 5'b00000) ? registers[readPort1] : 32'b0;  // Lectura del primer registro seleccionado
   assign busB = (readPort2 != 5'b00000) ? registers[readPort2] : 32'b0;  // Lectura del segundo registro seleccionado
 endmodule
