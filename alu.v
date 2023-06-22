@@ -7,6 +7,7 @@ module alu (
     input wire [31:0] imm,
     input wire [6:0] opcode,
     input wire [31:0] PCin,
+	 input wire ras,
     output wire [31:0] busC,
     output wire take_jmp
 );
@@ -87,11 +88,16 @@ module alu (
                     default: out_reg <= 0;
                 endcase
             end
+<<<<<<< HEAD
+				//-------- BRANCHES------
+            `JAL, `JALR: out_reg <= PCin + 4;              // JAL y JALR. pongo en busC la direccion de retorno
+=======
             //REVISAR TEMA SALTOS
             `JAL, `JALR: begin 
 										out_reg <= PCin + 4;              // JAL y JALR. pongo en busC la direccion de retorno
 										flag <= 1'b1;
 								 end
+>>>>>>> 3798d327c626f5be8d50a8ff941dc6d51cefaa43
             `BRANCH: begin
                 case(funct3)
                     3'b000: flag <= (busA == busB) ? 1'b1 : 1'b0;                      // BEQ
@@ -123,6 +129,7 @@ module alu (
                     default: out_reg <= 0;
                 endcase
             end
+				//-------- MEMORY --------
             `LOAD, `STORE: out_reg <= busA + imm;        // LOAD, STORE
             default: out_reg <= 0;
         endcase
@@ -130,7 +137,7 @@ module alu (
 	 
 	 
     assign busC = out_reg;
-    assign take_jmp = flag;
+    assign take_jmp = (ras? 0:flag);
  
 endmodule
 
