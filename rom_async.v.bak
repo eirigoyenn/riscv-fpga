@@ -1,0 +1,21 @@
+module reg_bank(
+  input wire [7:0] address,
+  input wire size,
+  output wire [31:0] q
+);
+
+  reg [7:0] memory [255:0];  // Declaración de los registros
+  initial begin
+    $readmemb("rom_init.mif", memory);
+  end
+
+  always @(*) begin
+    if (regWrite && (writePort != 5'b00000)) begin  // Si quiero escribir (no se puede escribir el registro 0)
+      registers[writePort] <= wBus;  // Escritura en el registro seleccionado
+    end
+    busA = (readPort1 != 5'b00000) ? registers[readPort1] : 32'b0;  // Lectura del primer registro seleccionado
+    busB = (readPort2 != 5'b00000) ? registers[readPort2] : 32'b0;  // Lectura del segundo registro seleccionado
+    registers[1] = 32'h00000001;
+    registers[2] = 32'h00000002;
+  end
+endmodule

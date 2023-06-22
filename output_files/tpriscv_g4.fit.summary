@@ -1,0 +1,16 @@
+Fitter Status : Successful - Thu Jun 22 16:35:32 2023
+Quartus Prime Version : 22.1std.0 Build 915 10/25/2022 SC Lite Edition
+Revision Name : tpriscv_g4
+Top-level Entity Name : tpriscv_g4
+Family : Cyclone IV E
+Device : EP4CE22F17C6
+Timing Models : Final
+Total logic elements : 11,689 / 22,320 ( 52 % )
+    Total combinational functions : 11,568 / 22,320 ( 52 % )
+    Dedicated logic registers : 2,950 / 22,320 ( 13 % )
+Total registers : 2950
+Total pins : 45 / 154 ( 29 % )
+Total virtual pins : 266
+Total memory bits : 0 / 608,256 ( 0 % )
+Embedded Multiplier 9-bit elements : 0 / 132 ( 0 % )
+Total PLLs : 1 / 4 ( 25 % )

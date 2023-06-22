@@ -37,78 +37,83 @@ reg [31:0] aux=32'h00000000;
 
 reg muxrasreg=0;
 
-always @(posedge ras_en)
+always @(ras_en)
 begin 
-	muxrasreg=0;
-	begin
-			case(opcode)
-				7'b1101111://JAL el decoder me pasa si uso los registro x1 o x5
-					begin
-						if(imm_in!=0)	//Logica de Push , solo si se usan los registros x1=1 y x5=5(por documentacion)
-						begin						
-							
-							pc_jmp_ <= (pc_in+imm_in);			//mando al pc la nueva direccion.	
-							stack[tos]= pc_in+(32'h00000004);  //guardo la direccion de retorno.
-							tos = tos + 1;
-							muxrasreg=1'b1;
-						end
-						else			// Logica de Pop , imm_in=0; 
-						begin			
-							muxrasreg=1'b1;
-							tos = tos - 1;
-							pc_jmp_ = stack[tos];
-							end	
-					end
-				7'b1100111://JALR
-					begin	
-						if(rd==rs1)	//Push
-						begin				
-							aux=pc_in+(imm_in+rs1);
-							pc_jmp_={aux[31:1],1'b0};	//mando al pc la nueva direccion.	
-							stack[tos]= pc_in+(32'h00000004);  //guardo la direccion de retorno.
-							tos = tos + 1;
-							muxrasreg=1'b1;
-						end
-						
-						else if(( (rs1==5'b00001) || (rs1==5'b00101) )&&( (rd!=5'b00001) && (rd!=5'b00101) )) //pop
+	if(ras_en == 1'b1) begin 
+		muxrasreg=0;
+		begin
+				case(opcode)
+					7'b1101111://JAL el decoder me pasa si uso los registro x1 o x5
 						begin
-
-							muxrasreg=1'b1;
-							tos = tos - 1;
-							pc_jmp_ = stack[tos];
+							if(imm_in!=0)	//Logica de Push , solo si se usan los registros x1=1 y x5=5(por documentacion)
+							begin						
+								
+								pc_jmp_ <= (pc_in+imm_in);			//mando al pc la nueva direccion.	
+								stack[tos]= pc_in+(32'h00000004);  //guardo la direccion de retorno.
+								tos = tos + 1;
+								muxrasreg=1'b1;
+							end
+							else			// Logica de Pop , imm_in=0; 
+							begin			
+								muxrasreg=1'b1;
+								tos = tos - 1;
+								pc_jmp_ = stack[tos];
+								end	
 						end
-						
-						else if(( (rd==5'b00001) || (rd==5'b00101) )&&( (rs1!=5'b00001)&&(rs1!=5'b00101) )) //push 
-						begin
-							
-							aux=pc_in+(imm_in+rs1);
-							pc_jmp_={aux[31:1],1'b0};	//mando al pc la nueva direccion.	
-							stack[tos]= pc_in+(32'h00000004);  //guardo la direccion de retorno.
-							tos = tos + 1;
-							muxrasreg=1'b1;
-						end
-					
-							
-						else if (( (rd==5'b00001)||(rd==5'b00101) )&&( (rs1==5'b00001)||(rs1==5'b00101) )) 	//Pop , y push 
+					7'b1100111://JALR
 						begin	
-
-							aux=(imm_in+rs1);
-							pc_jmp_=(pc_in+{aux[31:1],1'b0}); 
-							tos=tos-1;
-							stack[tos]= pc_in+(32'h00000004);
-							muxrasreg=1'b1;
+							if(rd==rs1)	//Push
+							begin				
+								aux=pc_in+(imm_in+rs1);
+								pc_jmp_={aux[31:1],1'b0};	//mando al pc la nueva direccion.	
+								stack[tos]= pc_in+(32'h00000004);  //guardo la direccion de retorno.
+								tos = tos + 1;
+								muxrasreg=1'b1;
+							end
 							
+							else if(( (rs1==5'b00001) || (rs1==5'b00101) )&&( (rd!=5'b00001) && (rd!=5'b00101) )) //pop
+							begin
+
+								muxrasreg=1'b1;
+								tos = tos - 1;
+								pc_jmp_ = stack[tos];
+							end
+							
+							else if(( (rd==5'b00001) || (rd==5'b00101) )&&( (rs1!=5'b00001)&&(rs1!=5'b00101) )) //push 
+							begin
+								
+								aux=pc_in+(imm_in+rs1);
+								pc_jmp_={aux[31:1],1'b0};	//mando al pc la nueva direccion.	
+								stack[tos]= pc_in+(32'h00000004);  //guardo la direccion de retorno.
+								tos = tos + 1;
+								muxrasreg=1'b1;
+							end
+						
+								
+							else if (( (rd==5'b00001)||(rd==5'b00101) )&&( (rs1==5'b00001)||(rs1==5'b00101) )) 	//Pop , y push 
+							begin	
+
+								aux=(imm_in+rs1);
+								pc_jmp_=(pc_in+{aux[31:1],1'b0}); 
+								tos=tos-1;
+								stack[tos]= pc_in+(32'h00000004);
+								muxrasreg=1'b1;
+								
+							end
+								
 						end
-							
-					end
-				default:
-					begin
+					default:
+						begin
 
-						pc_jmp_=pc_in+(32'h00000004);
-						muxrasreg=1'b1;
-					end
-			endcase
-		end
+							pc_jmp_=pc_in+(32'h00000004);
+							muxrasreg=1'b1;
+						end
+				endcase
+			end
+	end 
+	else begin 
+		muxrasreg = 1'b0;
+	end
 end
 
 assign pc_jmp = pc_jmp_;

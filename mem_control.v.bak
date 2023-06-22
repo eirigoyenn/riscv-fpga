@@ -1,0 +1,54 @@
+`include "util.v"
+
+module mem_control
+(
+	input wire [6:0] opcode,
+	input wire [2:0] funct3,
+	output wire [2:0] num_bytes,
+	output wire [1:0] wrn,			//Write(10), read (01), none (00)
+	output wire signado
+);
+	
+	reg[1:0] wrn_reg ;
+	reg[1:0] num_bytes_reg ;
+	reg signado_reg;
+	
+	always @(*) begin
+		case (opcode)
+			`STORE: begin
+					wrn_reg = 2'b10;
+					signado_reg = 0;
+					case(funct3)
+						3'000: begin
+									num_bytes_reg = funct3 << 1;
+								end
+						3'001: begin
+									num_bytes_reg = funct3 << 1;
+								end
+						3'010: begin
+									num_bytes_reg = funct3 << 1;
+								end
+					endcase
+				end
+			
+			`LOAD: begin
+					wrn_reg = 2'b01;
+					signado_reg = ~funct3[2];
+					case(funct3)
+						3'000: begin
+									num_bytes_reg = funct3 << 1;
+								end
+						3'001: begin
+									num_bytes_reg = funct3 << 1;
+								end
+						3'010: begin
+									num_bytes_reg = funct3 << 1;
+								end
+					endcase
+				end
+			default: wrn_reg=2'b00;
+						signado_reg = 0;
+						num_bytes_reg= 3'b000;
+		endcase
+	end
+endmodule

@@ -1,0 +1,4 @@
+Warning (10268): Verilog HDL information at ras_ctrl.v(40): always construct contains both blocking and non-blocking assignments File: C:/Users/Enrique/Desktop/5-1/Electro5/TPs/tpriscv_g4/ras_ctrl.v Line: 40
+Warning (10268): Verilog HDL information at decoder.v(15): always construct contains both blocking and non-blocking assignments File: C:/Users/Enrique/Desktop/5-1/Electro5/TPs/tpriscv_g4/decoder.v Line: 15
+Warning (10268): Verilog HDL information at alu.v(22): always construct contains both blocking and non-blocking assignments File: C:/Users/Enrique/Desktop/5-1/Electro5/TPs/tpriscv_g4/alu.v Line: 22
+Warning (10268): Verilog HDL information at stage_latch.v(16): always construct contains both blocking and non-blocking assignments File: C:/Users/Enrique/Desktop/5-1/Electro5/TPs/tpriscv_g4/stage_latch.v Line: 16

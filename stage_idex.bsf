@@ -88,6 +88,13 @@ https://fpgasoftware.intel.com/eula.
 		(line (pt 0 160)(pt 16 160)(line_width 3))
 	)
 	(port
+		(pt 0 176)
+		(input)
+		(text "ras_ena_in" (rect 0 0 44 12)(font "Arial" ))
+		(text "ras_ena_in" (rect 21 171 65 183)(font "Arial" ))
+		(line (pt 0 176)(pt 16 176)(line_width 1))
+	)
+	(port
 		(pt 224 32)
 		(output)
 		(text "busa_out[31..0]" (rect 0 0 60 12)(font "Arial" ))
@@ -135,6 +142,13 @@ https://fpgasoftware.intel.com/eula.
 		(text "rd_out[4..0]" (rect 0 0 47 12)(font "Arial" ))
 		(text "rd_out[4..0]" (rect 156 123 203 135)(font "Arial" ))
 		(line (pt 224 128)(pt 208 128)(line_width 3))
+	)
+	(port
+		(pt 224 144)
+		(output)
+		(text "ras_ena_out" (rect 0 0 50 12)(font "Arial" ))
+		(text "ras_ena_out" (rect 153 139 203 151)(font "Arial" ))
+		(line (pt 224 144)(pt 208 144)(line_width 1))
 	)
 	(drawing
 		(rectangle (rect 16 16 208 192)(line_width 1))

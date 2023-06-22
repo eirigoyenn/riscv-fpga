@@ -25,15 +25,6 @@ module haltnpipe_control(
     end
 
 	always @ (negedge clk) begin 
-        //guardo rd que me entra.
-        used_regs[counter] = rd_ID;
-        if(counter == 2) begin
-            counter = 0;
-        end 
-        else begin
-            counter = counter + 1;
-        end
-
         //chequeo si quieren usar un reg que todavia no se hizo WB
         if( (rs2_ID == used_regs[0] || rs2_ID == used_regs[1] || rs2_ID == used_regs[2]) && rs2_ID != 5'b00000) begin
             ena_fetch = 0;
@@ -55,6 +46,15 @@ module haltnpipe_control(
             ena_idex = 1;
             ena_exma = 1;
             ena_mawb = 1;
+        end
+			
+			//guardo rd que me entra.
+        used_regs[counter] = rd_ID;
+        if(counter == 2) begin
+            counter = 0;
+        end 
+        else begin
+            counter = counter + 1;
         end
 
         //borro el registro donde ya se hizo WB

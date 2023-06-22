@@ -1,0 +1,80 @@
+m255
+K4
+z2
+!s11f vlog 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/Enrique/Desktop/5-1/Electro5/TPs/tpriscv_g4/simulation/qsim
+vhard_block
+!s110 1687443032
+!i10b 1
+!s100 XXT>AWcNcGWFaROS_<7?Z2
+Z1 !s11b Dg1SIo80bB@j0V0VzS_@n1
+I[4@6NBbCUc8jd8@g[fUZC2
+Z2 VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1687443029
+Z3 8tpriscv_g4.vo
+Z4 Ftpriscv_g4.vo
+!i122 276
+L0 272490 34
+Z5 OV;L;2020.1;71
+r1
+!s85 0
+31
+!s108 1687443031.000000
+Z6 !s107 tpriscv_g4.vo|
+Z7 !s90 -work|work|tpriscv_g4.vo|
+!i113 1
+Z8 o-work work
+Z9 tCvgOpt 0
+vtpriscv_g4
+!s110 1687461333
+!i10b 1
+!s100 Z?i`0BM8lm8K@;7aJQ:L31
+R1
+I`eBR<o^0AF4jcWjVdH1GI2
+R2
+R0
+w1687461330
+R3
+R4
+!i122 294
+L0 32 277404
+R5
+r1
+!s85 0
+31
+!s108 1687461332.000000
+R6
+R7
+!i113 1
+R8
+R9
+vtpriscv_g4_vlg_vec_tst
+!s110 1687461334
+!i10b 1
+!s100 e6M]U=b]NdiRGM1H6gW^Y1
+R1
+I0C=1;5NgSJgQAcH9YIMQj1
+R2
+R0
+w1687461328
+8Waveform.vwf.vt
+FWaveform.vwf.vt
+!i122 295
+L0 30 86
+R5
+r1
+!s85 0
+31
+!s108 1687461333.000000
+!s107 Waveform.vwf.vt|
+!s90 -work|work|Waveform.vwf.vt|
+!i113 1
+R8
+R9

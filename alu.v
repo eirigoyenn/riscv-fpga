@@ -90,9 +90,10 @@ module alu (
             end
             //REVISAR TEMA SALTOS
             `JAL, `JALR: begin 
-                            out_reg <= PCin + 4;              // JAL y JALR. pongo en busC la direccion de retorno
-                            flag <= 1'b1;
-					    end
+									if(!ras) out_reg <= PCin + 4;
+									else  out_reg <= 0 ;              // JAL y JALR. pongo en busC la direccion de retorno
+                           flag <= 1'b1;
+								end
             `BRANCH: begin
                 case(funct3)
                     3'b000: flag <= (busA == busB) ? 1'b1 : 1'b0;                      // BEQ

@@ -1,0 +1,33 @@
+module stage_idex
+(
+ input wire[31:0] busa_in,
+ input wire[31:0] busb_in,
+ input wire[31:0] pc_in,
+ input wire clk,
+ input wire ena_idex,
+ output wire[31:0] busa_out,
+ output wire[31:0] busb_out,
+ output wire[31:0] pc_out
+ );
+	
+	reg[31:0] busa,busb,pc;
+	
+	
+	initial begin 
+		busa = 32'h00000000;
+		busb = 32'h00000000;
+		pc = 32'h00000000;
+	end
+	
+	always @(posedge clk) begin
+			if (ena_ifid) begin
+				inst = inst_in;
+				pc = pc_in;
+			end
+	end
+	
+	assign inst_out = inst;
+	assign pc_out = pc;
+
+
+endmodule

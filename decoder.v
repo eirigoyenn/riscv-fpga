@@ -1,6 +1,6 @@
 //PRIMERA IMPLEMENTACION DECODER PARA RISC V 32I
 // DECODER
-module Decoder ( instruccion,ras ,rs1,rs2,rd,funct3,imm_out,opcode);	//PEnsar como afecta si es litle/big endian
+module Decoder ( instruccion ,rs1,rs2,rd,funct3,imm_out,opcode,ras);	//PEnsar como afecta si es litle/big endian
 //input
  input[31:0] instruccion;
  //output

@@ -1,0 +1,14 @@
+Analysis & Synthesis Status : Successful - Thu Jun 22 16:33:53 2023
+Quartus Prime Version : 22.1std.0 Build 915 10/25/2022 SC Lite Edition
+Revision Name : tpriscv_g4
+Top-level Entity Name : tpriscv_g4
+Family : Cyclone IV E
+Total logic elements : 12,137
+    Total combinational functions : 11,568
+    Dedicated logic registers : 2,950
+Total registers : 2950
+Total pins : 45
+Total virtual pins : 266
+Total memory bits : 0
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 1
