@@ -43,6 +43,14 @@ module stage_exma
 				op =op_in;
 				busb = busb_in;
 			end
+			else begin
+				busc = 32'h00000000;
+				pc = 32'h00000000;
+				imm = 32'h00000000;
+				funct3 =3'b000;
+				op =7'b0000000;
+				busb = 32'h00000000;
+			end
 	end
 	
 	assign busc_out = busc;

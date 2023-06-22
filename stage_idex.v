@@ -45,6 +45,15 @@ module stage_idex
 				op =op_in;
 				rd=rd_in;
 			end
+			else begin
+				busa = 32'h00000000;
+				busb = 32'h00000000;
+				pc = 32'h00000000;
+				funct3 =3'b000;
+				imm = 32'h00000000;
+				op =7'b0000000;
+				rd = 5'b00000;
+			end
 	end
 	
 	assign busa_out = busa;

@@ -12,8 +12,8 @@ module jmp_ctrl (
     begin
         case (opcode)
             //REVISAR TEMA SALTOS
-            `JAL: new_PC <= PCin + imm + 4;              // JAL	La ALU pone en rd la direccion de retorno
-            `JALR: new_PC <= rs1 + imm + 4;            // JALR
+            `JAL: new_PC <= PCin + imm ;              // JAL	La ALU pone en rd la direccion de retorno
+            `JALR: new_PC <= rs1 + imm ;            // JALR
 				`BRANCH: new_PC <= PCin + imm;		// Lo hace para todos los branches y despues la ALU dice si se cumplio o no la condicion
             `AUIPC: new_PC <= PCin + imm;                // AUIPC
 				default: new_PC <= 0;

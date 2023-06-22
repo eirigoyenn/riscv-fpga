@@ -36,6 +36,13 @@ module stage_mawb
 				busc= busc_in;
 				wrn = wrn_in;
 			end
+			else begin
+				data = 32'h00000000;
+				busc = 32'h00000000;
+				rd = 5'b00000;
+				write_ena = 1'b0;
+				wrn= 2'b00;
+			end
 	end
 	
 	assign write_ena_out = write_ena;
